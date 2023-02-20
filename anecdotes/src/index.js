@@ -3,6 +3,13 @@ import ReactDOM from "react-dom"
 
 const App = ({ anecdotes }) => {
     const [selected, setSelected] = useState(0)
+    const [points, setPoints] = useState([0, 0, 0, 0, 0, 0])
+
+    const handleVoteAnecdote = () => {
+        const newPoints = [...points]
+        newPoints[selected] += 1
+        setPoints(newPoints)
+    }
 
     const handleSelectAnecdote = () => {
         const minimum = 1
@@ -15,7 +22,11 @@ const App = ({ anecdotes }) => {
     return (
         <>
             <div>{anecdotes[selected]}</div>
-            <button onClick={handleSelectAnecdote}>next anecdote</button>
+            <div>has {points[selected]} votes</div>
+            <div>
+                <button onClick={handleVoteAnecdote}>vote</button>
+                <button onClick={handleSelectAnecdote}>next anecdote</button>
+            </div>
         </>
     )
 }
