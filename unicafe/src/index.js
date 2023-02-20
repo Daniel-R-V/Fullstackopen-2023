@@ -13,9 +13,11 @@ const Button = ({ handleGoodClick, handleNeutralClick, handleBadClick }) => {
 
 const Statistic = ({ text, value }) => {
     return (
-        <h3>
-            {text} {value}
-        </h3>
+        <tr>
+            <td>
+                {text} {value}
+            </td>
+        </tr>
     )
 }
 
@@ -33,13 +35,16 @@ const Statistics = ({ good, neutral, bad }) => {
         <>
             <h1>statistics</h1>
 
-            <Statistic text="good" value={good} />
-            <Statistic text="neutral" value={neutral} />
-            <Statistic text="bad" value={bad} />
-
-            <h3>all {all}</h3>
-            <h3>average {average}</h3>
-            <h3>positive {positive}%</h3>
+            <table>
+                <tbody>
+                    <Statistic text="good" value={good} />
+                    <Statistic text="neutral" value={neutral} />
+                    <Statistic text="bad" value={bad} />
+                    <Statistic text="all" value={all} />
+                    <Statistic text="average" value={average} />
+                    <Statistic text="positive" value={positive + "%"} />
+                </tbody>
+            </table>
         </>
     )
 }
