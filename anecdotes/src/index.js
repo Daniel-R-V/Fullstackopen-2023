@@ -4,6 +4,9 @@ import ReactDOM from "react-dom"
 const App = ({ anecdotes }) => {
     const [selected, setSelected] = useState(0)
     const [points, setPoints] = useState([0, 0, 0, 0, 0, 0])
+    const highestPoints = Math.max(...points)
+    const winnerIndex = points.indexOf(highestPoints)
+    const winner = anecdotes[winnerIndex]
 
     const handleVoteAnecdote = () => {
         const newPoints = [...points]
@@ -21,12 +24,16 @@ const App = ({ anecdotes }) => {
 
     return (
         <>
+            <h1>Anecdote of the day</h1>
+
             <div>{anecdotes[selected]}</div>
             <div>has {points[selected]} votes</div>
-            <div>
-                <button onClick={handleVoteAnecdote}>vote</button>
-                <button onClick={handleSelectAnecdote}>next anecdote</button>
-            </div>
+            <button onClick={handleVoteAnecdote}>vote</button>
+            <button onClick={handleSelectAnecdote}>next anecdote</button>
+
+            <h1>Anecdote with most votes</h1>
+            <div>{winner}</div>
+            <div>has {highestPoints} votes</div>
         </>
     )
 }
