@@ -3,27 +3,38 @@ import ReactDOM from "react-dom"
 import "./index.css"
 
 const App = () => {
-    const [persons, setPersons] = useState(["Arto Hellas 040-1234567"])
+    const [persons, setPersons] = useState([
+        { name: "Arto Hellas", number: "040-123456" },
+        { name: "Ada Lovelace", number: "39-44-5323523" },
+        { name: "Peter Pan", number: "12-43-123456" }
+    ])
     const [newName, setNewName] = useState("")
     const [newNumber, setNewNumber] = useState("")
-    const infoPersons = persons.map((person) => <div key={person}>{person}</div>)
+    const [filterQuery, setFilterQuery] = useState("")
 
-    const addPerson = (event) => {
-        event.preventDefault()
-        const newPerson = `${newName} ${newNumber}`
-        if (persons.includes(newPerson)) {
+    const addPerson = (e) => {
+        e.preventDefault()
+
+        if (persons.find((person) => person.name === newName)) {
+            alert(`${newName} is already added to phonebook`)
+        } else {
+            const newPerson = { name: newName, number: newNumber }
+
+            setPersons(persons.concat(newPerson))
+
             setNewName("")
-            setNewNumber("")
-            return alert(`${newName} is already added to phonebook`)
         }
-        setPersons(persons.concat(newPerson))
-        setNewName("")
-        setNewNumber("")
     }
 
     return (
         <div>
             <h2>Phonebook</h2>
+            <p>
+                filter shown with <input type="text" value={filterQuery} onChange={(event) => setFilterQuery(event.target.value)} />
+            </p>
+
+            <h2>add a new</h2>
+
             <form onSubmit={addPerson}>
                 <div>
                     name: <input value={newName} onChange={(event) => setNewName(event.target.value)} />
@@ -36,7 +47,13 @@ const App = () => {
                 </div>
             </form>
             <h2>Numbers</h2>
-            <div>{infoPersons}</div>
+            {persons
+                .filter((person) => person.name.toLowerCase().includes(filterQuery))
+                .map((person) => (
+                    <div key={person.name}>
+                        {person.name} {person.number}
+                    </div>
+                ))}
         </div>
     )
 }
