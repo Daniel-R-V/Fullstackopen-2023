@@ -1,5 +1,8 @@
 import React, { useState } from "react"
 import ReactDOM from "react-dom"
+import Filter from "./Filter"
+import PersonForm from "./PersonForm"
+import Persons from "./Persons"
 import "./index.css"
 
 const App = () => {
@@ -29,31 +32,15 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <p>
-                filter shown with <input type="text" value={filterQuery} onChange={(event) => setFilterQuery(event.target.value)} />
-            </p>
+
+            <Filter filterQuery={filterQuery} setFilterQuery={setFilterQuery} />
 
             <h2>add a new</h2>
 
-            <form onSubmit={addPerson}>
-                <div>
-                    name: <input value={newName} onChange={(event) => setNewName(event.target.value)} />
-                </div>
-                <div>
-                    number: <input value={newNumber} onChange={(event) => setNewNumber(event.target.value)} />
-                </div>
-                <div>
-                    <button type="submit">add</button>
-                </div>
-            </form>
+            <PersonForm newName={newName} newNumber={newNumber} setNewName={setNewName} setNewNumber={setNewNumber} addPerson={addPerson} />
+
             <h2>Numbers</h2>
-            {persons
-                .filter((person) => person.name.toLowerCase().includes(filterQuery))
-                .map((person) => (
-                    <div key={person.name}>
-                        {person.name} {person.number}
-                    </div>
-                ))}
+            <Persons persons={persons} filterQuery={filterQuery} />
         </div>
     )
 }
