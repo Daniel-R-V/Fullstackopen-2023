@@ -6,12 +6,19 @@ const Countries = () => {
     const [countries, setCountries] = useState([])
     const [name, setName] = useState("")
     const [showCountry, setShowCountry] = useState({})
+    const [weather, setWeather] = useState({})
 
     useEffect(() => {
         axios.get("https://restcountries.com/v3.1/all").then((response) => {
             setCountries(response.data)
         })
     }, [])
+
+    useEffect(() => {
+        axios.get(`http://api.weatherstack.com/current?access_key=d6a898fc7a0930e6539a3415bcc026a7&query=${name}`).then((response) => {
+            setWeather(response.data)
+        })
+    }, [name])
 
     const filteredCountries = countries.filter((country) => country.name.common.toLowerCase().includes(name))
 
