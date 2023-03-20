@@ -1,5 +1,5 @@
 const express = require("express")
-var morgan = require("morgan")
+const morgan = require("morgan")
 const app = express()
 
 const unknownEndpoint = (request, response) => {
@@ -7,7 +7,15 @@ const unknownEndpoint = (request, response) => {
 }
 
 app.use(express.json())
-app.use(morgan(":method :url :status :response-time ms - :res[content-length]"))
+morgan.token('body', (request, response) => request.method === "POST" ? JSON.stringify(request.body) : "")
+
+app.use(morgan((tokens, request, response) => [
+        tokens.method(request, response),
+        tokens.url(request, response),
+        tokens.status(request, response),
+        tokens.res(request, response, 'content-length'), '-',
+        tokens['response-time'](request, response), 'ms', tokens.body(request, response)
+].join(' ')))
 
 let persons = [
     {
