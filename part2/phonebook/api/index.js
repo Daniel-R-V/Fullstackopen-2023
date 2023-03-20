@@ -69,6 +69,20 @@ app.post("/api/persons", (request, response) => {
         id: Math.floor(Math.random() * 100)
     }
 
+    if (!body.name) {
+        return response.status(400).json({
+            error: "Name missing"
+        })
+    } else if (!body.number) {
+        return response.status(400).json({
+            error: "Number missing"
+        })
+    } else if (persons.map((person) => person.name).includes(body.name)) {
+        return response.status(400).json({
+            error: "Name already exists"
+        })
+    }
+
     persons = persons.concat(person)
 
     response.json(person)
