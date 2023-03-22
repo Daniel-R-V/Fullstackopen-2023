@@ -12,8 +12,10 @@ const App = () => {
     const [newNumber, setNewNumber] = useState("")
     const [filterQuery, setFilterQuery] = useState("")
 
+    const baseURL = "http://localhost:3001/api/persons"
+
     useEffect(() => {
-        axios.get("http://localhost:3001/persons").then((response) => {
+        axios.get(baseURL).then((response) => {
             const { data } = response
             setPersons(data)
         })
