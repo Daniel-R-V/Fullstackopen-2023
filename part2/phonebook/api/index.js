@@ -1,7 +1,9 @@
+require("dotenv").config()
 const express = require("express")
 const cors = require("cors")
 const morgan = require("morgan")
 const app = express()
+const Person = require("./models/person")
 
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: "unknown endpoint" })
@@ -41,7 +43,9 @@ app.get("/", (request, response) => {
 })
 
 app.get("/api/persons", (request, response) => {
-    response.json(persons)
+    Person.find({}).then((people) => {
+        response.json(people)
+    })
 })
 
 app.get("/api/info", (request, response) => {
@@ -54,14 +58,9 @@ app.get("/api/info", (request, response) => {
 })
 
 app.get("/api/persons/:id", (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find((person) => person.id === id)
-
-    if (person) {
+    Person.findById(request.params.id).then((person) => {
         response.json(person)
-    } else {
-        response.status(404).end()
-    }
+    })
 })
 
 app.delete("/api/persons/:id", (request, response) => {
@@ -74,34 +73,26 @@ app.delete("/api/persons/:id", (request, response) => {
 app.post("/api/persons", (request, response) => {
     const body = request.body
 
-    const person = {
+    if (body.name === undefined) {
+        return response.status(400).json({ error: "name missing" })
+    } else if (body.number === undefined) {
+        return response.status(400).json({ error: "number missing" })
+    }
+
+    const person = new Person({
         name: body.name,
-        number: body.number,
-        id: Math.floor(Math.random() * 100)
-    }
+        number: body.number
+    })
 
-    if (!body.name) {
-        return response.status(400).json({
-            error: "Name missing"
-        })
-    } else if (!body.number) {
-        return response.status(400).json({
-            error: "Number missing"
-        })
-    } else if (persons.map((person) => person.name).includes(body.name)) {
-        return response.status(400).json({
-            error: "Name already exists"
-        })
-    }
-
-    persons = persons.concat(person)
-
-    response.json(person)
+    person.save().then((savedPerson) => {
+        response.json(savedPerson)
+    })
 })
 
 app.use(unknownEndpoint)
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
