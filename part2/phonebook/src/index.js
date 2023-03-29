@@ -29,9 +29,14 @@ const App = () => {
         } else {
             const newPerson = { name: newName, number: newNumber }
 
-            setPersons(persons.concat(newPerson))
-
-            setNewName("")
+            axios
+                .post(baseURL, newPerson)
+                .then((response) => {
+                    setPersons([...persons, response.data])
+                    setNewName("")
+                    setNewNumber("")
+                })
+                .catch((error) => console.log(error))
         }
     }
 
